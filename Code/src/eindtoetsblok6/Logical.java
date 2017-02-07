@@ -103,6 +103,7 @@ public static String OutputData() {
      */
     public static List MakeDropDown() {
         List<String> list = new ArrayList<String>(uInter);
+        list.sort(null);
         return list;
     }
 
