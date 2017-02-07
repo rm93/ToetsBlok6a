@@ -173,25 +173,34 @@ public class Logical {
             f.setAcceptAllFileFilterUsed(false);
             f.addChoosableFileFilter(new FileNameExtensionFilter("Tab delimeted", "*.txt", "txt"));
             f.setSelectedFile(new File("GeneExport"));
+            
+            
+            int returnVal = f.showOpenDialog(null);
             f.showSaveDialog(null);
             
-            try (PrintWriter writer = new PrintWriter(f.getSelectedFile().getAbsolutePath() + ".txt", "UTF-8")) {
-                writer.println("Gene ID\t Tax ID\t Product accesion.version\t Product name");
-                Iterator iterator = intersection.iterator();
-                for (int i = 0, n = intersection.size(); i < n; i++) {
-                    int num = (Integer.parseInt(iterator.next().toString()));
-                    for (int j = 0, k = inter.size(); j < k; j++) {
-                        if (num == Integer.parseInt(inter.get(j).genB.GeneID)) {
-                            writer.println(inter.get(j).genB.GeneID + "\t" + inter.get(j).genB.TaxID + "\t" + inter.get(j).genB.ProAccVer + "\t" + inter.get(j).genB.ProName + "\n");
-                            break;
+            if (returnVal == JFileChooser.APPROVE_OPTION) {
+                try (PrintWriter writer = new PrintWriter(f.getSelectedFile().getAbsolutePath() + ".txt", "UTF-8")) {
+                    writer.println("Gene ID\t Tax ID\t Product accesion.version\t Product name");
+                    Iterator iterator = intersection.iterator();
+                    for (int i = 0, n = intersection.size(); i < n; i++) {
+                        int num = (Integer.parseInt(iterator.next().toString()));
+                        for (int j = 0, k = inter.size(); j < k; j++) {
+                            if (num == Integer.parseInt(inter.get(j).genB.GeneID)) {
+                                writer.println(inter.get(j).genB.GeneID + "\t" + inter.get(j).genB.TaxID + "\t" + inter.get(j).genB.ProAccVer + "\t" + inter.get(j).genB.ProName + "\n");
+                                break;
+                            }
                         }
                     }
+                    String infoMessage = "Het GeneExport bestand is succesvol gegenereerd.";
+                    String titleBar = "GeneExport succesvol gegenereerd";
+                    JOptionPane.showMessageDialog(null, infoMessage, titleBar, JOptionPane.INFORMATION_MESSAGE);
+                } catch (Exception e) {
+                    String infoMessage = "Er is geen locatie gekozen probeer het nogmaals.";
+                    String titleBar = "Error";
+                    JOptionPane.showMessageDialog(null, infoMessage, titleBar, JOptionPane.INFORMATION_MESSAGE);
                 }
-                String infoMessage = "Het GeneExport bestand is succesvol gegenereerd.";
-                String titleBar = "GeneExport succesvol gegenereerd";
-                JOptionPane.showMessageDialog(null, infoMessage, titleBar, JOptionPane.INFORMATION_MESSAGE);
-            } catch (Exception e) {
-                String infoMessage = "Er is geen locatie gekozen probeer het nogmaals.";
+            }else if (returnVal == JFileChooser.CANCEL_OPTION) {
+                String infoMessage = "De export is gestopt.";
                 String titleBar = "Error";
                 JOptionPane.showMessageDialog(null, infoMessage, titleBar, JOptionPane.INFORMATION_MESSAGE);
             }
@@ -223,26 +232,32 @@ public class Logical {
             f.setSelectedFile(new File("PubMedExport"));
             f.showSaveDialog(null);
 
-            try (PrintWriter writer = new PrintWriter(f.getSelectedFile().getAbsolutePath() + ".txt", "UTF-8")) {
-                writer.println("Gene ID\t Product accesion.version\t Product name\t PubMed ID");
-                Iterator iterator = intersection.iterator();
-                for (int i = 0, n = intersection.size(); i < n; i++) {
-                    int num = (Integer.parseInt(iterator.next().toString()));
-                    for (int j = 0, k = inter.size(); j < k; j++) {
-                        if (num == Integer.parseInt(inter.get(j).genB.GeneID)) {
-                            writer.println(inter.get(j).genB.GeneID + "\t" + inter.get(j).genB.ProAccVer + "\t" + inter.get(j).genB.ProName + "\t" + inter.get(j).pubmedID + "\n");
-                            break;
+            int returnVal = f.showOpenDialog(null);
+            if (returnVal == JFileChooser.APPROVE_OPTION) {
+                try (PrintWriter writer = new PrintWriter(f.getSelectedFile().getAbsolutePath() + ".txt", "UTF-8")) {
+                    writer.println("Gene ID\t Product accesion.version\t Product name\t PubMed ID");
+                    Iterator iterator = intersection.iterator();
+                    for (int i = 0, n = intersection.size(); i < n; i++) {
+                        int num = (Integer.parseInt(iterator.next().toString()));
+                        for (int j = 0, k = inter.size(); j < k; j++) {
+                            if (num == Integer.parseInt(inter.get(j).genB.GeneID)) {
+                                writer.println(inter.get(j).genB.GeneID + "\t" + inter.get(j).genB.ProAccVer + "\t" + inter.get(j).genB.ProName + "\t" + inter.get(j).pubmedID + "\n");
+                                break;
+                            }
                         }
                     }
+                    String infoMessage = "Het PubMedExport bestand is succesvol gegenereerd.";
+                    String titleBar = "PubMedExport succesvol gegenereerd";
+                    JOptionPane.showMessageDialog(null, infoMessage, titleBar, JOptionPane.INFORMATION_MESSAGE);
+                } catch (Exception e) {
+                    String infoMessage = "Er is geen locatie gekozen probeer het nogmaals.";
+                    String titleBar = "Error";
+                    JOptionPane.showMessageDialog(null, infoMessage, titleBar, JOptionPane.INFORMATION_MESSAGE);
                 }
-                String infoMessage = "Het PubMedExport bestand is succesvol gegenereerd.";
-                String titleBar = "PubMedExport succesvol gegenereerd";
-                JOptionPane.showMessageDialog(null, infoMessage, titleBar, JOptionPane.INFORMATION_MESSAGE);
-            } catch (Exception e) {
-                String infoMessage = "Er is geen locatie gekozen probeer het nogmaals.";
+            } else if (returnVal == JFileChooser.CANCEL_OPTION) {
+                String infoMessage = "De export is gestopt.";
                 String titleBar = "Error";
                 JOptionPane.showMessageDialog(null, infoMessage, titleBar, JOptionPane.INFORMATION_MESSAGE);
-
             }
         }
     }
