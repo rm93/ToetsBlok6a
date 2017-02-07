@@ -5,6 +5,7 @@ package eindtoetsblok6;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
@@ -12,6 +13,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import javax.swing.JFileChooser;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.JOptionPane;
 
 /**
@@ -70,22 +72,20 @@ public class Logical {
                 }
                 TotaalInter++;
             }
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             String infoMessage = "Het gekozen betand kan niet gelezen worden selecteer een ander bestand.";
             String titleBar = "Error";
-            JOptionPane.showMessageDialog(null, infoMessage, titleBar, JOptionPane.INFORMATION_MESSAGE);          
+            JOptionPane.showMessageDialog(null, infoMessage, titleBar, JOptionPane.INFORMATION_MESSAGE);
         }
     }
 
-
-/**
- * Methode retourneert de statistieke van het gekozen bestand.
- *
- * @return Een string met de statistieke naar de methode
- * OpenButtonActionPerformed in het bestand GUI.
- */
-public static String OutputData() {
+    /**
+     * Methode retourneert de statistieke van het gekozen bestand.
+     *
+     * @return Een string met de statistieke naar de methode
+     * OpenButtonActionPerformed in het bestand GUI.
+     */
+    public static String OutputData() {
         String output = "";
         output += "TaxID 1: \t\t\t" + uTax1.size() + " genes\n";
         output += "TaxID 2: \t\t\t" + uTax2.size() + " genes\n";
@@ -169,11 +169,13 @@ public static String OutputData() {
         } else {
             JFileChooser f = new JFileChooser();
             f.setDialogTitle("Selecteer opslag locatie");
-            f.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+            f.setFileSelectionMode(JFileChooser.FILES_ONLY);
+            f.setAcceptAllFileFilterUsed(false);
+            f.addChoosableFileFilter(new FileNameExtensionFilter("Tab delimeted", "*.txt", "txt"));
+            f.setSelectedFile(new File("GeneExport"));
             f.showSaveDialog(null);
             
-
-            try (PrintWriter writer = new PrintWriter(f.getSelectedFile().toString() + "\\GeneExport.txt", "UTF-8")) {
+            try (PrintWriter writer = new PrintWriter(f.getSelectedFile().getAbsolutePath() + ".txt", "UTF-8")) {
                 writer.println("Gene ID\t Tax ID\t Product accesion.version\t Product name");
                 Iterator iterator = intersection.iterator();
                 for (int i = 0, n = intersection.size(); i < n; i++) {
@@ -193,7 +195,6 @@ public static String OutputData() {
                 String titleBar = "Error";
                 JOptionPane.showMessageDialog(null, infoMessage, titleBar, JOptionPane.INFORMATION_MESSAGE);
             }
-
         }
     }
 
@@ -216,10 +217,13 @@ public static String OutputData() {
         } else {
             JFileChooser f = new JFileChooser();
             f.setDialogTitle("Selecteer opslag locatie");
-            f.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+            f.setFileSelectionMode(JFileChooser.FILES_ONLY);
+            f.setAcceptAllFileFilterUsed(false);
+            f.addChoosableFileFilter(new FileNameExtensionFilter("Tab delimeted", "*.txt", "txt"));
+            f.setSelectedFile(new File("PubMedExport"));
             f.showSaveDialog(null);
 
-            try (PrintWriter writer = new PrintWriter(f.getSelectedFile().toString() + "\\PubMedExport.txt", "UTF-8")) {
+            try (PrintWriter writer = new PrintWriter(f.getSelectedFile().getAbsolutePath() + ".txt", "UTF-8")) {
                 writer.println("Gene ID\t Product accesion.version\t Product name\t PubMed ID");
                 Iterator iterator = intersection.iterator();
                 for (int i = 0, n = intersection.size(); i < n; i++) {
@@ -238,9 +242,8 @@ public static String OutputData() {
                 String infoMessage = "Er is geen locatie gekozen probeer het nogmaals.";
                 String titleBar = "Error";
                 JOptionPane.showMessageDialog(null, infoMessage, titleBar, JOptionPane.INFORMATION_MESSAGE);
-            
 
-}
+            }
         }
     }
 
@@ -251,120 +254,120 @@ public static String OutputData() {
      */
     class Gene {
 
-    String TaxID;
-    String GeneID;
-    String ProAccVer;
-    String ProName;
+        String TaxID;
+        String GeneID;
+        String ProAccVer;
+        String ProName;
 
-    public Gene(String TaxID, String GeneID, String ProAccVer, String ProName) {
-        this.TaxID = TaxID;
-        this.GeneID = GeneID;
-        this.ProAccVer = ProAccVer;
-        this.ProName = ProName;
+        public Gene(String TaxID, String GeneID, String ProAccVer, String ProName) {
+            this.TaxID = TaxID;
+            this.GeneID = GeneID;
+            this.ProAccVer = ProAccVer;
+            this.ProName = ProName;
+        }
+
+        public String getTaxID() {
+            return TaxID;
+        }
+
+        public void setTaxID(String TaxID) {
+            this.TaxID = TaxID;
+        }
+
+        public String getGeneID() {
+            return GeneID;
+        }
+
+        public void setGeneID(String GeneID) {
+            this.GeneID = GeneID;
+        }
+
+        public String getProAccVer() {
+            return ProAccVer;
+        }
+
+        public void setProAccVer(String ProAccVer) {
+            this.ProAccVer = ProAccVer;
+        }
+
+        public String getProName() {
+            return ProName;
+        }
+
+        public void setProName(String ProName) {
+            this.ProName = ProName;
+        }
     }
 
-    public String getTaxID() {
-        return TaxID;
+    /**
+     * In de class inter staat alle informatie op het object inter te kunnen
+     * maken. In het object worden de objecten genA en B opgeslagen en daarnaast
+     * worden de pubmedID, interaction, date en GeneRIF opgeslagen als String.
+     */
+    class inter {
+
+        Gene genA;
+        Gene genB;
+        String pubmedID;
+        String interaction;
+        String date;
+        String GeneRIF;
+
+        public inter(Gene genA, Gene genB, String pubmedID, String interaction, String date, String GeneRIF) {
+            this.genA = genA;
+            this.genB = genB;
+            this.pubmedID = pubmedID;
+            this.interaction = interaction;
+            this.date = date;
+            this.GeneRIF = GeneRIF;
+        }
+
+        public Gene getGenA() {
+            return genA;
+        }
+
+        public void setGenA(Gene genA) {
+            this.genA = genA;
+        }
+
+        public Gene getGenB() {
+            return genB;
+        }
+
+        public void setGenB(Gene genB) {
+            this.genB = genB;
+        }
+
+        public String getPubmedID() {
+            return pubmedID;
+        }
+
+        public void setPubmedID(String pubmedID) {
+            this.pubmedID = pubmedID;
+        }
+
+        public String getInteraction() {
+            return interaction;
+        }
+
+        public void setInteraction(String interaction) {
+            this.interaction = interaction;
+        }
+
+        public String getDate() {
+            return date;
+        }
+
+        public void setDate(String date) {
+            this.date = date;
+        }
+
+        public String getGeneRIF() {
+            return GeneRIF;
+        }
+
+        public void setGeneRIF(String GeneRIF) {
+            this.GeneRIF = GeneRIF;
+        }
     }
-
-    public void setTaxID(String TaxID) {
-        this.TaxID = TaxID;
-    }
-
-    public String getGeneID() {
-        return GeneID;
-    }
-
-    public void setGeneID(String GeneID) {
-        this.GeneID = GeneID;
-    }
-
-    public String getProAccVer() {
-        return ProAccVer;
-    }
-
-    public void setProAccVer(String ProAccVer) {
-        this.ProAccVer = ProAccVer;
-    }
-
-    public String getProName() {
-        return ProName;
-    }
-
-    public void setProName(String ProName) {
-        this.ProName = ProName;
-    }
-}
-
-/**
- * In de class inter staat alle informatie op het object inter te kunnen maken.
- * In het object worden de objecten genA en B opgeslagen en daarnaast worden de
- * pubmedID, interaction, date en GeneRIF opgeslagen als String.
- */
-class inter {
-
-    Gene genA;
-    Gene genB;
-    String pubmedID;
-    String interaction;
-    String date;
-    String GeneRIF;
-
-    public inter(Gene genA, Gene genB, String pubmedID, String interaction, String date, String GeneRIF) {
-        this.genA = genA;
-        this.genB = genB;
-        this.pubmedID = pubmedID;
-        this.interaction = interaction;
-        this.date = date;
-        this.GeneRIF = GeneRIF;
-    }
-
-    public Gene getGenA() {
-        return genA;
-    }
-
-    public void setGenA(Gene genA) {
-        this.genA = genA;
-    }
-
-    public Gene getGenB() {
-        return genB;
-    }
-
-    public void setGenB(Gene genB) {
-        this.genB = genB;
-    }
-
-    public String getPubmedID() {
-        return pubmedID;
-    }
-
-    public void setPubmedID(String pubmedID) {
-        this.pubmedID = pubmedID;
-    }
-
-    public String getInteraction() {
-        return interaction;
-    }
-
-    public void setInteraction(String interaction) {
-        this.interaction = interaction;
-    }
-
-    public String getDate() {
-        return date;
-    }
-
-    public void setDate(String date) {
-        this.date = date;
-    }
-
-    public String getGeneRIF() {
-        return GeneRIF;
-    }
-
-    public void setGeneRIF(String GeneRIF) {
-        this.GeneRIF = GeneRIF;
-    }
-}
 }
